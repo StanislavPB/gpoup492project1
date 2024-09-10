@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RepositoryTestVar2 {
 
+
         @Test
         void testAddUser() {
             Repository repository = new Repository();
