@@ -7,8 +7,4 @@ public class FinanceApp {
         UserMenu userMenu = new UserMenu();
         userMenu.menuStart();
     }
-
-    private void demo(){
-
-    }
 }
