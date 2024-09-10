@@ -1,12 +1,12 @@
 package org.gpoup492project1.Project.UserMenu;
 
-import Project.DTO.Response;
-import Project.Entity.Balance;
-import Project.Entity.User;
-import Project.Repository.Repository;
-import Project.Service.BalanceOperationService;
-import Project.Service.UserService;
-import Project.Service.Validation;
+import org.gpoup492project1.Project.DTO.Response;
+import org.gpoup492project1.Project.Entity.Balance;
+import org.gpoup492project1.Project.Entity.User;
+import org.gpoup492project1.Project.Repository.Repository;
+import org.gpoup492project1.Project.Service.BalanceOperationService;
+import org.gpoup492project1.Project.Service.UserService;
+import org.gpoup492project1.Project.Service.Validation;
 
 import java.time.LocalDate;
 import java.util.Scanner;
