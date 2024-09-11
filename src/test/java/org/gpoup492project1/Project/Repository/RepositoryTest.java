@@ -1,6 +1,7 @@
 package org.gpoup492project1.Project.Repository;
 
 
+import Project.Repository.Repository;
 import Project.Entity.Balance;
 import Project.Entity.User;
 import org.junit.jupiter.api.BeforeEach;

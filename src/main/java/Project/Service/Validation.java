@@ -1,6 +1,6 @@
-package org.gpoup492project1.Project.Service;
+package Project.Service;
 
-import org.gpoup492project1.Project.Entity.User;
+import Project.Entity.User;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

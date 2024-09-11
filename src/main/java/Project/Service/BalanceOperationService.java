@@ -1,9 +1,9 @@
-package org.gpoup492project1.Project.Service;
+package Project.Service;
 
-import org.gpoup492project1.Project.DTO.Response;
-import org.gpoup492project1.Project.Entity.Balance;
-import org.gpoup492project1.Project.Entity.User;
-import org.gpoup492project1.Project.Repository.Repository;
+import Project.DTO.Response;
+import Project.Entity.Balance;
+import Project.Entity.User;
+import Project.Repository.Repository;
 
 import java.time.LocalDate;
 import java.util.List;

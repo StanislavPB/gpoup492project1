@@ -1,4 +1,4 @@
-package org.gpoup492project1.Project.Entity;
+package Project.Entity;
 
 import java.util.List;
 
@@ -29,6 +29,9 @@ public class User {
         this.id = id;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {
