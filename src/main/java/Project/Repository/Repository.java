@@ -1,7 +1,7 @@
-package org.gpoup492project1.Project.Repository;
+package Project.Repository;
 
-import org.gpoup492project1.Project.Entity.Balance;
-import org.gpoup492project1.Project.Entity.User;
+import Project.Entity.Balance;
+import Project.Entity.User;
 
 import java.util.ArrayList;
 import java.util.List;

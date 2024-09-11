@@ -1,6 +1,6 @@
-package org.gpoup492project1.Project.Service;
+package Project.Service;
 
-import org.gpoup492project1.Project.Entity.User;
+import Project.Entity.User;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -70,6 +70,17 @@ public class Validation {
             }
         }
     }
-
-
+    public Integer getValidateId(){
+        Scanner scanner = new Scanner(System.in);
+        Integer id = null;
+        while (id == null){
+            System.out.println("Введите ID пользователя: ");
+            try {
+                id = Integer.parseInt(scanner.nextLine());
+            }catch (NumberFormatException e){
+                System.out.println("Ошибка: пожалуйста, введите целое число в качестве ID.");
+            }
+        }
+        return id;
+    }
 }

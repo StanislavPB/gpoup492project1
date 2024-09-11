@@ -1,4 +1,4 @@
-package org.gpoup492project1.Project.Entity;
+package Project.Entity;
 
 public class Category {
     private String name;

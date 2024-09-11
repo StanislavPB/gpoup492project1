@@ -1,12 +1,12 @@
-package org.gpoup492project1.Project.UserMenu;
+package Project.UserMenu;
 
-import org.gpoup492project1.Project.DTO.Response;
-import org.gpoup492project1.Project.Entity.Balance;
-import org.gpoup492project1.Project.Entity.User;
-import org.gpoup492project1.Project.Repository.Repository;
-import org.gpoup492project1.Project.Service.BalanceOperationService;
-import org.gpoup492project1.Project.Service.UserService;
-import org.gpoup492project1.Project.Service.Validation;
+import Project.DTO.Response;
+import Project.Entity.Balance;
+import Project.Entity.User;
+import Project.Repository.Repository;
+import Project.Service.BalanceOperationService;
+import Project.Service.UserService;
+import Project.Service.Validation;
 
 import java.time.LocalDate;
 import java.util.Scanner;
@@ -69,8 +69,7 @@ public class UserMenu {
         }
     }
 private void addIncome(){
-    System.out.println("Введите ID пользователя: ");
-    Integer id = scanner.nextInt();
+    Integer id = validation.getValidateId();
     scanner.nextLine();
     Response<Balance> response = balanceOperationService.addNewIncome(id);
 
@@ -81,8 +80,7 @@ private void addIncome(){
     }
 }
 private void addOutcome(){
-    System.out.println("Введите ID пользователя: ");
-    Integer id = scanner.nextInt();
+    Integer id = validation.getValidateId();
     scanner.nextLine();
     Response<Balance> response = balanceOperationService.addNewOutcome(id);
 
@@ -93,13 +91,11 @@ private void addOutcome(){
     }
 }
 private void showHistory(){
-System.out.println("Введите ID пользователя: ");
-    Integer id = scanner.nextInt();
+    Integer id = validation.getValidateId();
     balanceOperationService.showHistoryOfOperations(id);
 }
     private void generateReport() {
-        System.out.print("Введите ID пользователя: ");
-        Integer id = scanner.nextInt();
+        Integer id = validation.getValidateId();
         scanner.nextLine();
         LocalDate startDate = getValidDateInput("Введите начальную дату (YYYY-MM-DD): ");
         LocalDate endDate = getValidDateInput("Введите конечную дату (YYYY-MM-DD): ");
