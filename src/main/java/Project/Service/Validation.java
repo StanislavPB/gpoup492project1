@@ -45,21 +45,26 @@ public class Validation {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Scanner scanner = new Scanner(System.in);
         LocalDate date = null;
-        while (date ==null){
-            System.out.println("Введите дату в формате yyyy-MM-dd:");
-            try{
-                date = LocalDate.parse(scanner.nextLine(), dateTimeFormatter);
-                String validationError = validateDate(date);
-                if (!validationError.isEmpty()){
-                    System.out.println(validationError);
-                    date = null;
-                }
-            }catch (DateTimeParseException e){
-                System.out.println("Ошибка: некорректный формат даты. Попробуйте снова.");
+        boolean valid = false;
+
+        while (!valid) {
+            String input = scanner.nextLine();
+
+            if (input.isEmpty()) {
+                return null;
+            }
+
+            try {
+                date = LocalDate.parse(input);
+                valid = true; // Если дата успешно распарсилась, завершаем цикл
+            } catch (DateTimeParseException e) {
+                System.out.println("Ошибка: неправильный формат даты. Пожалуйста, введите дату в формате ГГГГ-ММ-ДД или оставьте поле пустым.");
             }
         }
+
         return date;
     }
+
     public double getDoubleInput(){
         Scanner scanner = new Scanner(System.in);
         while(true){

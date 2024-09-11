@@ -27,7 +27,9 @@ public class Balance {
         return date;
     }
 
-
+    public String getCategory() {
+        return category;
+    }
 
     @Override
     public String toString() {
