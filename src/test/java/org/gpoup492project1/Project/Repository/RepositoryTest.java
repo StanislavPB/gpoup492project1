@@ -1,12 +1,20 @@
 package org.gpoup492project1.Project.Repository;
 
 
+<<<<<<< Dana
+
+
+import org.gpoup492project1.Project.Entity.Balance;
+import org.gpoup492project1.Project.Entity.User;
+=======
 import Project.Repository.Repository;
 import Project.Entity.Balance;
 import Project.Entity.User;
+>>>>>>> master
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +30,7 @@ class RepositoryTest {
         // Инициализация перед каждым тестом
         repository = new Repository();
         testUser = new User(null,"",new ArrayList<>());
-        testUser.setName("Тест User");
+        testUser.getName();
        testUser.getBalances();
     }
 
@@ -30,7 +38,7 @@ class RepositoryTest {
     public void testAddIncomeToUser() {
 
         repository.addUser(testUser);
-        Balance income = new Balance("Зарплата", 1000);
+        Balance income = new Balance(1000.0, 0.0, "Зарплата", LocalDate.now());
 
 
         repository.addIncomeToUser(testUser, income);
@@ -45,7 +53,7 @@ class RepositoryTest {
     public void testAddOutcomeToUser() {
 
         repository.addUser(testUser);
-        Balance outcome = new Balance("Еда", -500); // Создаем баланс расхода
+        Balance outcome = new Balance(0.0, 500.0, "Еда", LocalDate.now()); // Создаем баланс расхода
 
 
         repository.addOutcomeToUser(testUser, outcome);
@@ -70,8 +78,8 @@ class RepositoryTest {
         repository.addUser(testUser);
 
 
-        Balance income = new Balance("Зарплата", 1000);
-        Balance outcome = new Balance("Еда", -500);
+        Balance income = new Balance(1000.0, 0.0, "Зарплата", LocalDate.now());
+        Balance outcome = new Balance(0.0, 500.0, "Еда", LocalDate.now());
         repository.addIncomeToUser(testUser, income);
         repository.addOutcomeToUser(testUser, outcome);
 
@@ -83,5 +91,7 @@ class RepositoryTest {
         assertTrue(history.contains(income), "История должна содержать доход.");
         assertTrue(history.contains(outcome), "История должна содержать расход.");
     }
+
+
 }
 
