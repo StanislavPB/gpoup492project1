@@ -1,16 +1,9 @@
 package org.gpoup492project1.Project.Repository;
 
 
-<<<<<<< Dana
-
-
-import org.gpoup492project1.Project.Entity.Balance;
-import org.gpoup492project1.Project.Entity.User;
-=======
 import Project.Repository.Repository;
 import Project.Entity.Balance;
 import Project.Entity.User;
->>>>>>> master
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
