@@ -9,6 +9,7 @@ import Project.Service.UserService;
 import Project.Service.Validation;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserMenu {
@@ -70,8 +71,12 @@ public class UserMenu {
     }
 private void addIncome(){
     Integer id = validation.getValidateId();
-    scanner.nextLine();
-    Response<Balance> response = balanceOperationService.addNewIncome(id);
+    String source = chooseFromList(repository.getSourcesOfIncome(),"Выберите источник дохода:");
+    System.out.println("Введите сумму дохода: ");
+    double amount = validation.getDoubleInput();
+    System.out.println("Введите дату дохода (в формате ГГГГ-ММ-ДД): ");
+    LocalDate date = validation.getDateInput();
+    Response<Balance> response = balanceOperationService.addNewIncome(id, amount, source, date);
 
     if (response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
@@ -81,8 +86,12 @@ private void addIncome(){
 }
 private void addOutcome(){
     Integer id = validation.getValidateId();
-    scanner.nextLine();
-    Response<Balance> response = balanceOperationService.addNewOutcome(id);
+    String category = chooseFromList(repository.getCategoriesOfOutcomes(), "Выберите категорию расхода:");
+    System.out.println("Введите сумму расхода: ");
+    double amount = validation.getDoubleInput();
+    System.out.println("Введите дату расхода (в формате ГГГГ-ММ-ДД): ");
+    LocalDate date = validation.getDateInput();
+    Response<Balance> response = balanceOperationService.addNewOutcome(id, amount, category, date);
 
     if (response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
@@ -92,15 +101,33 @@ private void addOutcome(){
 }
 private void showHistory(){
     Integer id = validation.getValidateId();
-    balanceOperationService.showHistoryOfOperations(id);
-}
+
+     System.out.println("Введите начальную дату (в формате ГГГГ-ММ-ДД) или оставьте пустым для пропуска: ");
+     LocalDate startDate = validation.getDateInput();
+     System.out.println("Введите конечную дату (в формате ГГГГ-ММ-ДД) или оставьте пустым для пропуска: ");
+     LocalDate endDate = validation.getDateInput();
+
+
+    Response<List<Balance>> response = balanceOperationService.getHistoryOfOperations(id, startDate, endDate,  null);
+    if (!response.getError().isEmpty()) {
+        System.out.println("Ошибка: " + response.getError());
+    } else {
+        List<Balance> history = response.getBody();
+        if (history.isEmpty()) {
+            System.out.println("Операции не найдены.");
+        } else {
+            System.out.println("История операций:");
+            history.forEach(operation -> System.out.println(operation.toString()));
+        }
+}}
     private void generateReport() {
         Integer id = validation.getValidateId();
-        scanner.nextLine();
-        LocalDate startDate = getValidDateInput("Введите начальную дату (YYYY-MM-DD): ");
-        LocalDate endDate = getValidDateInput("Введите конечную дату (YYYY-MM-DD): ");
+        System.out.println("Введите начальную дату (в формате ГГГГ-ММ-ДД) или оставьте пустым для просмотра всех операций: ");
+        LocalDate startDate = getValidDateInput();
+        System.out.println("Введите конечную дату (в формате ГГГГ-ММ-ДД) или оставьте пустым для просмотра всех операций: ");
+        LocalDate endDate = getValidDateInput();
 
-        Response<String> reportResponse = balanceOperationService.generateReport(id, startDate, endDate);
+        Response<String> reportResponse = balanceOperationService.generateReport(id, startDate, endDate, null);
 
         if (!reportResponse.getError().isEmpty()) {
             System.out.println("Ошибка: " + reportResponse.getError());
@@ -109,8 +136,34 @@ private void showHistory(){
         }
 
     }
+    private String chooseFromList(List<String> options, String message){
+        System.out.println(message);
+        for (int i = 0; i < options.size(); i++) {
+            System.out.println((i+1)+". "+options.get(i));
+        }
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
 
-    private LocalDate getValidDateInput(String prompt) {
+        if (input.isEmpty()) {
+            // Если ввод пустой, возвращаем пустую строку
+            return "";
+        }
+
+        try {
+            int choice = Integer.parseInt(input);
+            if (choice > 0 && choice <= options.size()) {
+                return options.get(choice - 1);
+            } else {
+                System.out.println("Ошибка: выберите номер из списка.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Ошибка: введите корректный номер из списка.");
+        }
+
+        return chooseFromList(options, message);  // Повторный вызов в случае ошибки
+    }
+
+    private LocalDate getValidDateInput() {
         return validation.getDateInput();
     }
 }

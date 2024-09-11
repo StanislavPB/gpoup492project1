@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class BalanceOperationService {
     private final Repository repository;
@@ -20,35 +21,16 @@ public class BalanceOperationService {
     }
 
 
-    private String chooseFromList(List<String> options, String message){
-        System.out.println(message);
-        for (int i = 0; i < options.size(); i++) {
-            System.out.println((i+1)+". "+options.get(i));
-        }
-        int choice=-1;
-        while (choice<1||choice>options.size()){
-            System.out.println("Выберите номер из списка:");
-            choice = Integer.parseInt(scanner.nextLine());
-        }
-        return options.get(choice-1);
-    }
 
-    public Response<Balance> addNewIncome(Integer id) {
+    public Response<Balance> addNewIncome(Integer id, double amount, String source, LocalDate date) {
         String validationResult = validation.validateIncome(id);
         if (!validationResult.isEmpty()) {
             return new Response<>(null, validationResult);
         }
 
-        String source = chooseFromList(repository.getSourcesOfIncome(), "Выберите источник дохода:");
-
-        System.out.println("Введите сумму дохода:");
-        double amount = validation.getDoubleInput();
-
-        LocalDate date = validation.getDateInput();
-
         Balance newIncome = new Balance(amount, 0.0, source, date);
-
         Optional<User> userOptional = repository.findUserById(id);
+
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             repository.addIncomeToUser(user, newIncome);
@@ -57,22 +39,17 @@ public class BalanceOperationService {
             return new Response<>(null, "Ошибка: пользователь не найден.");
         }
     }
-    public Response<Balance> addNewOutcome(Integer id) {
+
+
+    public Response<Balance> addNewOutcome(Integer id, double amount, String category, LocalDate date) {
         String validationResult = validation.validateOutcome(id);
         if (!validationResult.isEmpty()) {
             return new Response<>(null, validationResult);
         }
 
-        String category = chooseFromList(repository.getCategoriesOfOutcomes(), "Выберите категорию расхода:");
-
-        System.out.println("Введите сумму расхода:");
-        double amount = validation.getDoubleInput();
-
-        LocalDate date = validation.getDateInput();
-
         Balance newOutcome = new Balance(0.0, amount, category, date);
-
         Optional<User> userOptional = repository.findUserById(id);
+
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             repository.addOutcomeToUser(user, newOutcome);
@@ -81,39 +58,41 @@ public class BalanceOperationService {
             return new Response<>(null, "Ошибка: пользователь не найден.");
         }
     }
-    public void showHistoryOfOperations (Integer id) {
+    public Response<List<Balance>> getHistoryOfOperations (Integer id, LocalDate startDate, LocalDate endDate, String category) {
     Response<User> userResponse = findUserById(id);
-    if(!userResponse.getError().isEmpty()) {
-        System.out.println(userResponse.getError());
-        return;
+    if(!userResponse.getError().isEmpty()){
+        return new Response<>(null, userResponse.getError());
     }
        User user = userResponse.getBody();
-    List<Balance> history = repository.getTransactionHistory(user);
-    history.forEach(System.out::println);
+    List<Balance> history = user.getBalances();
+    List<Balance> filteredBalances = history.stream()
+            .filter(balance -> (startDate == null||!balance.getDate().isBefore(startDate))&&
+                               (endDate==null||!balance.getDate().isAfter(endDate)) &&
+                               (category==null||category.isEmpty()||balance.getCategory().equalsIgnoreCase(category)))
+            .collect(Collectors.toList());
+            return new Response<>(filteredBalances, "");
     }
 
-    public Response<String> generateReport(Integer id, LocalDate startDate, LocalDate endDate) {
+    public Response<String> generateReport(Integer id, LocalDate startDate, LocalDate endDate, String category) {
         Response<User> userResponse = findUserById(id);
         if (!userResponse.getError().isEmpty()) {
             return new Response<>(null, userResponse.getError());
         }
         User user = userResponse.getBody();
-        double totalIncome = 0.0;
-        double totalOutcome = 0.0;
+        List<Balance> history = user.getBalances();
 
-        List<Balance> history = repository.getTransactionHistory(user);
-        for (Balance balance : history) {
-            if (!balance.getDate().isBefore(startDate) && !balance.getDate().isAfter(endDate)) {
-                totalIncome += balance.getIncome();
-                totalOutcome += balance.getOutcome();
-            }
-        }
+        List<Balance> filteredBalances = history.stream()
+                .filter(balance -> (startDate == null || !balance.getDate().isBefore(startDate)) &&
+                        (endDate == null || !balance.getDate().isAfter(endDate)) &&
+                        (category == null || category.isEmpty() || balance.getCategory().equalsIgnoreCase(category)))
+                .collect(Collectors.toList());
 
-        String report = "Отчет с " + startDate + " по " + endDate +
-                "\nОбщий доход: " + totalIncome +
-                "\nОбщий расход: " + totalOutcome +
-                "\nБаланс: " + (totalIncome - totalOutcome);
-        return new Response<>(report, "");
+        StringBuilder report = new StringBuilder("Отчет о балансе пользователя " + user.getName() + ":\n");
+        filteredBalances.forEach(balance -> report.append(balance.toString()).append("\n"));
+        if(filteredBalances.isEmpty()){
+            report.append("Нет операций за указанный период.");
+    }
+    return new Response<>(report.toString(),"");
     }
 
 
