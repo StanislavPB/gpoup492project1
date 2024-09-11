@@ -70,6 +70,17 @@ public class Validation {
             }
         }
     }
-
-
+    public Integer getValidateId(){
+        Scanner scanner = new Scanner(System.in);
+        Integer id = null;
+        while (id == null){
+            System.out.println("Введите ID пользователя: ");
+            try {
+                id = Integer.parseInt(scanner.nextLine());
+            }catch (NumberFormatException e){
+                System.out.println("Ошибка: пожалуйста, введите целое число в качестве ID.");
+            }
+        }
+        return id;
+    }
 }
