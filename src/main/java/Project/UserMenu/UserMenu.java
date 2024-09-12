@@ -137,31 +137,35 @@ private void showHistory(){
 
     }
     private String chooseFromList(List<String> options, String message){
-        System.out.println(message);
-        for (int i = 0; i < options.size(); i++) {
-            System.out.println((i+1)+". "+options.get(i));
-        }
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-
-        if (input.isEmpty()) {
-            // Если ввод пустой, возвращаем пустую строку
-            return "";
-        }
-
-        try {
-            int choice = Integer.parseInt(input);
-            if (choice > 0 && choice <= options.size()) {
-                return options.get(choice - 1);
-            } else {
-                System.out.println("Ошибка: выберите номер из списка.");
+        String choice = null;
+        while (choice == null) {
+            System.out.println(message);
+            for (int i = 0; i < options.size(); i++) {
+                System.out.println((i + 1) + ". " + options.get(i));
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Ошибка: введите корректный номер из списка.");
+            System.out.println("Выберите номер из списка: ");
+            String input = scanner.nextLine();
+
+            if (input.isEmpty()) {
+                return "";
+            }
+
+            try {
+                int selectedOption = Integer.parseInt(input);
+                if (selectedOption > 0 && selectedOption <= options.size()) {
+                    choice = options.get(selectedOption - 1);
+                } else {
+                    System.out.println("Ошибка: выберите номер из списка.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Ошибка: введите числовое значение.");
+            }
         }
 
-        return chooseFromList(options, message);  // Повторный вызов в случае ошибки
-    }
+            return choice;
+        }
+
 
     private LocalDate getValidDateInput() {
         return validation.getDateInput();
