@@ -26,7 +26,6 @@ public class UserServiceTest {
 
     @Test
     public void testAddNewUser_Success() {
-        // gdy dodajemy poprawnego użytkownika
         String userName = "Kim";
 
         Response<User> response = userService.addNewUser(userName);
@@ -38,7 +37,6 @@ public class UserServiceTest {
 
     @Test
     public void testAddNewUser_ValidationError() {
-        // gdy walidacja nie przechodzi (np. puste imię)
         String userName = "";
         Response<User> response = userService.addNewUser(userName);
 
