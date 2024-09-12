@@ -21,7 +21,7 @@ public class BalanceOperationService {
 
 
     public Response<Account> addNewIncome(Integer id, double amount, String source, LocalDate date) {
-        String validationResult = validation.validateIncome(id);
+        String validationResult = validation.validateIncome(amount);
         if (!validationResult.isEmpty()) {
             return new Response<>(null, validationResult);
         }
@@ -32,7 +32,7 @@ public class BalanceOperationService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             repository.addIncomeToUser(user, newIncome);
-            return new Response<>(newIncome, "Доход добавлен.");
+            return new Response<>(newIncome, "");
         } else {
             return new Response<>(null, "Ошибка: пользователь не найден.");
         }
@@ -40,7 +40,7 @@ public class BalanceOperationService {
 
 
     public Response<Account> addNewOutcome(Integer id, double amount, String category, LocalDate date) {
-        String validationResult = validation.validateOutcome(id);
+        String validationResult = validation.validateOutcome(amount);
         if (!validationResult.isEmpty()) {
             return new Response<>(null, validationResult);
         }
@@ -51,7 +51,7 @@ public class BalanceOperationService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             repository.addOutcomeToUser(user, newOutcome);
-            return new Response<>(newOutcome, "Расход добавлен.");
+            return new Response<>(newOutcome, "");
         } else {
             return new Response<>(null, "Ошибка: пользователь не найден.");
         }
@@ -68,8 +68,8 @@ public class BalanceOperationService {
     }
     public List<Account> filteredBalances(List<Account> history, LocalDate startDate, LocalDate endDate, String category) {
         return history.stream()
-                .filter(balance -> (startDate == null||!balance.getDate().isBefore(startDate)) &&
-                        (endDate == null || !balance.getDate().isAfter(endDate)) &&
+                .filter(balance -> (startDate == null||balance.getDate().isAfter(startDate)) &&
+                        (endDate == null || balance.getDate().isBefore(endDate)) &&
                         (category == null || balance.getCategory().equalsIgnoreCase(category)))
                 .collect(Collectors.toList());
     }

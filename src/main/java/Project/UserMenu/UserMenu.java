@@ -72,8 +72,8 @@ public class UserMenu {
 private void addIncome(){
     Integer id = validation.getValidateId();
     Response<User> userResponse = balanceOperationService.findUserById(id);
-    if (!userResponse.getError().isEmpty()){
-        System.out.println("Ошибка: "+userResponse.getError());
+    if (!userResponse.getError().isEmpty()) {
+        System.out.println("Ошибка: " + userResponse.getError());
         return;
     }
     User user = userResponse.getBody();
@@ -91,6 +91,7 @@ private void addIncome(){
         System.out.println("Доход добавлен: " + response.getBody().toString());
     }
 }
+
 private void addOutcome(){
     Integer id = validation.getValidateId();
     Response<User> userResponse = balanceOperationService.findUserById(id);
