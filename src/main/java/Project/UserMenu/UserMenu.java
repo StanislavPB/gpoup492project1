@@ -71,14 +71,21 @@ public class UserMenu {
     }
 private void addIncome(){
     Integer id = validation.getValidateId();
+    Response<User> userResponse = balanceOperationService.findUserById(id);
+    if (!userResponse.getError().isEmpty()){
+        System.out.println("Ошибка: "+userResponse.getError());
+        return;
+    }
+    User user = userResponse.getBody();
     String source = chooseFromList(repository.getSourcesOfIncome(),"Выберите источник дохода:");
     System.out.println("Введите сумму дохода: ");
     double amount = validation.getDoubleInput();
     System.out.println("Введите дату дохода (в формате ГГГГ-ММ-ДД): ");
     LocalDate date = validation.getDateInput();
-    Response<Account> response = balanceOperationService.addNewIncome(id, amount, source, date);
 
-    if (response.getError().isEmpty()) {
+    Response<Account> response = balanceOperationService.addNewIncome(user.getId(), amount, source, date);
+
+    if (!response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
     } else {
         System.out.println("Доход добавлен: " + response.getBody().toString());
@@ -86,14 +93,23 @@ private void addIncome(){
 }
 private void addOutcome(){
     Integer id = validation.getValidateId();
+    Response<User> userResponse = balanceOperationService.findUserById(id);
+    if(!userResponse.getError().isEmpty()){
+        System.out.println("Ошибка: " + userResponse.getError());
+        return;
+    }
+    User user = userResponse.getBody();
     String category = chooseFromList(repository.getCategoriesOfOutcomes(), "Выберите категорию расхода:");
+
     System.out.println("Введите сумму расхода: ");
     double amount = validation.getDoubleInput();
+
     System.out.println("Введите дату расхода (в формате ГГГГ-ММ-ДД): ");
     LocalDate date = validation.getDateInput();
-    Response<Account> response = balanceOperationService.addNewOutcome(id, amount, category, date);
 
-    if (response.getError().isEmpty()) {
+    Response<Account> response = balanceOperationService.addNewOutcome(user.getId(), amount, category, date);
+
+    if (!response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
     } else {
         System.out.println("Расход добавлен: " + response.getBody().toString());
