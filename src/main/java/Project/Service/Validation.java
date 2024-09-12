@@ -11,26 +11,24 @@ import java.util.Scanner;
 public class Validation {
 
     public String validateUser(User user){
-        String validationResult = "";
         if (user == null||user.getName()==null||user.getName().isEmpty()){
-            validationResult = validationResult+"Ошибка: имя пользователя не может быть пустым.\n";
+            return "Ошибка: имя пользователя не может быть пустым.\n";
         }
-        return validationResult;
+        return "";
 }
     public String validateIncome(double amount) {
-        String validationResult = "";
+
         if (amount <= 0) {
-            validationResult = validationResult + "Ошибка: доход должен быть положительным числом.\n";
+            return "Ошибка: доход должен быть положительным числом.\n";
         }
-        return validationResult;
+        return "";
     }
 
         public String validateOutcome(double amount){
-        String validationResult = "";
         if(amount<=0){
-            validationResult=validationResult+"Ошибка: расход должен быть положительным числом.\n";
+            return "Ошибка: расход должен быть положительным числом.\n";
         }
-        return validationResult;
+        return "";
     }
     public String validateDate(LocalDate date) {
         if (date == null) {
@@ -53,11 +51,15 @@ public class Validation {
             if (input.isEmpty()) {
                 return null;
             }
-
             try {
-                date = LocalDate.parse(input);
-                valid = true; // Если дата успешно распарсилась, завершаем цикл
-            } catch (DateTimeParseException e) {
+                date = LocalDate.parse(input, dateTimeFormatter);
+                String validationError = validateDate(date);
+                if (validationError.isEmpty()) {
+                    valid = true;
+                } else {
+                    System.out.println(validationError);
+                }
+            }catch (DateTimeParseException e) {
                 System.out.println("Ошибка: неправильный формат даты. Пожалуйста, введите дату в формате ГГГГ-ММ-ДД или оставьте поле пустым.");
             }
         }
@@ -68,8 +70,15 @@ public class Validation {
     public double getDoubleInput(){
         Scanner scanner = new Scanner(System.in);
         while(true){
+            String input = scanner.nextLine();
             try {
-                return Double.parseDouble(scanner.nextLine());
+                double value = Double.parseDouble(input);
+                String validationError = validateIncome(value);
+                if(validationError.isEmpty()) {
+                    return value;
+                }else {
+                    System.out.println(validationError);
+                }
             }catch (NumberFormatException e){
                 System.out.println("Ошибка: введите число типа double.");
             }
