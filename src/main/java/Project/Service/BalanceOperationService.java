@@ -68,8 +68,8 @@ public class BalanceOperationService {
     }
     public List<Account> filteredBalances(List<Account> history, LocalDate startDate, LocalDate endDate, String category) {
         return history.stream()
-                .filter(balance -> (startDate == null||balance.getDate().isAfter(startDate)) &&
-                        (endDate == null || balance.getDate().isBefore(endDate)) &&
+                .filter(balance -> (startDate == null||!balance.getDate().isBefore(startDate)) &&
+                        (endDate == null || !balance.getDate().isAfter(endDate)) &&
                         (category == null || balance.getCategory().equalsIgnoreCase(category)))
                 .collect(Collectors.toList());
     }
