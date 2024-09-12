@@ -2,13 +2,13 @@ package Project.Entity;
 
 import java.time.LocalDate;
 
-public class Balance {
+public class Account {
    private Double income;
    private Double outcome;
    private String category;
    private LocalDate date;
 
-    public Balance(Double income, Double outcome, String category, LocalDate date) {
+    public Account(Double income, Double outcome, String category, LocalDate date) {
         this.income = income;
         this.outcome = outcome;
         this.category = category;

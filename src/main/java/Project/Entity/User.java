@@ -4,21 +4,21 @@ import java.util.List;
 
 public class User {
    private String name;
-   private List<Balance> balances;
+   private List<Account> accounts;
    private Integer id;
 
-    public User(Integer id, String name, List<Balance> balances) {
+    public User(Integer id, String name, List<Account> accounts) {
         this.id = id;
         this.name = name;
-        this.balances = balances;
+        this.accounts = accounts;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Balance> getBalances() {
-        return balances;
+    public List<Account> getBalances() {
+        return accounts;
     }
 
     public Integer getId() {
@@ -37,7 +37,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "name='" + name + '\'' +
-                ", balances=" + balances +
+                ", balances=" + accounts +
                 ", id=" + id +
                 '}';
     }

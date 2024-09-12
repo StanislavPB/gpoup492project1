@@ -1,7 +1,7 @@
 package Project.UserMenu;
 
 import Project.DTO.Response;
-import Project.Entity.Balance;
+import Project.Entity.Account;
 import Project.Entity.User;
 import Project.Repository.Repository;
 import Project.Service.BalanceOperationService;
@@ -76,7 +76,7 @@ private void addIncome(){
     double amount = validation.getDoubleInput();
     System.out.println("Введите дату дохода (в формате ГГГГ-ММ-ДД): ");
     LocalDate date = validation.getDateInput();
-    Response<Balance> response = balanceOperationService.addNewIncome(id, amount, source, date);
+    Response<Account> response = balanceOperationService.addNewIncome(id, amount, source, date);
 
     if (response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
@@ -91,7 +91,7 @@ private void addOutcome(){
     double amount = validation.getDoubleInput();
     System.out.println("Введите дату расхода (в формате ГГГГ-ММ-ДД): ");
     LocalDate date = validation.getDateInput();
-    Response<Balance> response = balanceOperationService.addNewOutcome(id, amount, category, date);
+    Response<Account> response = balanceOperationService.addNewOutcome(id, amount, category, date);
 
     if (response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
@@ -108,11 +108,11 @@ private void showHistory(){
      LocalDate endDate = validation.getDateInput();
 
 
-    Response<List<Balance>> response = balanceOperationService.getHistoryOfOperations(id, startDate, endDate,  null);
+    Response<List<Account>> response = balanceOperationService.getHistoryOfOperations(id, startDate, endDate,  null);
     if (!response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
     } else {
-        List<Balance> history = response.getBody();
+        List<Account> history = response.getBody();
         if (history.isEmpty()) {
             System.out.println("Операции не найдены.");
         } else {

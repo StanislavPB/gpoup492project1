@@ -7,8 +7,8 @@ import Project.Repository.Repository;
 import java.util.ArrayList;
 
 public class UserService {
-    private Repository repository = new Repository();
-    private Validation validation = new Validation();
+    private Repository repository;
+    private Validation validation;
 
 
     public UserService(Repository repository, Validation validation) {
@@ -16,7 +16,7 @@ public class UserService {
         this.validation = validation;
     }
     public Response<User> addNewUser(String name){
-        User user = new User(null, name, new ArrayList<>());
+        User user = new User(0, name, new ArrayList<>());
         String validationResult = validation.validateUser(user);
         if(!validationResult.isEmpty()){
             return new Response<>(null,validationResult);

@@ -1,6 +1,6 @@
 package Project.Repository;
 
-import Project.Entity.Balance;
+import Project.Entity.Account;
 import Project.Entity.User;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class Repository implements RepositoryInterface{
     }
 
     @Override
-    public void addIncomeToUser(User user, Balance income) {
+    public void addIncomeToUser(User user, Account income) {
         Optional<User>foundUser = findUserById(user.getId());
         if(foundUser.isPresent()){
             foundUser.get().getBalances().add(income);
@@ -28,7 +28,7 @@ public class Repository implements RepositoryInterface{
     }
 
     @Override
-    public void addOutcomeToUser(User user, Balance outcome) {
+    public void addOutcomeToUser(User user, Account outcome) {
     Optional<User> foundUser = findUserById(user.getId());
     if(foundUser.isPresent()){
         foundUser.get().getBalances().add(outcome);
@@ -37,16 +37,16 @@ public class Repository implements RepositoryInterface{
 
     @Override
     public List<String> getCategoriesOfOutcomes() {
-        return List.of("Еда","Транспорт","Развлечения","Страховка","Инвестиции");
+        return List.of("Еда","Транспорт","Развлечения","Страховка","Инвестиции","Другое");
     }
 
     @Override
     public List<String> getSourcesOfIncome() {
-        return List.of("Зарплата","Инвестиции","Аренда","Сетевой маркетинг","Дивиденды");
+        return List.of("Зарплата","Инвестиции","Аренда","Сетевой маркетинг","Другое");
     }
 
     @Override
-    public List<Balance> getTransactionHistory(User user) {
+    public List<Account> getTransactionHistory(User user) {
         Optional<User> foundUser = findUserById(user.getId());
         if(foundUser.isPresent()){
             return foundUser.get().getBalances();
