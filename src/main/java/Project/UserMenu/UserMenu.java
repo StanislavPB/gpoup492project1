@@ -11,6 +11,7 @@ import Project.Service.UserService;
 import Project.Service.Validation;
 
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -32,6 +33,8 @@ public class UserMenu {
             System.out.println("5. Сгенерировать сводный отчет по месяцам");
             System.out.println("0. Выход");
             System.out.print("Выберите действие: ");
+
+            try{
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
@@ -56,9 +59,11 @@ public class UserMenu {
                     break;
                 default:
                     System.out.println("Неверный выбор. Попробуйте снова");
-                    break;
             }
-        }
+        }catch (InputMismatchException e){
+                System.out.println("Ошибка: введите число от 0 до 5.");
+                scanner.nextLine();
+            }}
     }
     public void addUser(){
         System.out.println("Введите имя пользователя: ");
