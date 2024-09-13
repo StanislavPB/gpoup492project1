@@ -1,5 +1,6 @@
 package Project.Service;
 
+import Project.DTO.ReportDTO;
 import Project.DTO.Response;
 import Project.Entity.Account;
 import Project.Entity.User;
@@ -24,14 +25,14 @@ public class BalanceOperationService {
 
 
 
-    public Response<List<Account>> getHistoryOfOperations (Integer id, LocalDate startDate, LocalDate endDate, String category) {
-    Response<User> userResponse = userService.findUserById(id);
+    public Response<List<Account>> getHistoryOfOperations (ReportDTO reportDTO) {
+    Response<User> userResponse = userService.findUserById(reportDTO.getId());
     if(!userResponse.getError().isEmpty()){
         return new Response<>(null, userResponse.getError());
     }
        User user = userResponse.getBody();
     List<Account> history = user.getBalances();
-    List<Account> filteredAccounts = filteredBalances(history,startDate,endDate,category);
+    List<Account> filteredAccounts = filteredBalances(history,reportDTO.getStartDate(),reportDTO.getEndDate(),reportDTO.getCategory());
             return new Response<>(filteredAccounts, "");
     }
     public List<Account> filteredBalances(List<Account> history, LocalDate startDate, LocalDate endDate, String category) {
@@ -43,8 +44,8 @@ public class BalanceOperationService {
     }
 
 
-    public Response<String> generateReport(Integer id, LocalDate startDate, LocalDate endDate, String category) {
-        Response<List<Account>> historyResponse = getHistoryOfOperations(id, startDate, endDate, category);
+    public Response<String> generateReport(ReportDTO reportDTO) {
+        Response<List<Account>> historyResponse = getHistoryOfOperations(reportDTO);
         if (!historyResponse.getError().isEmpty()) {
             return new Response<>(null, historyResponse.getError());
         }

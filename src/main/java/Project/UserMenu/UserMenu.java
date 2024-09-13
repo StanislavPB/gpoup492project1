@@ -1,5 +1,7 @@
 package Project.UserMenu;
 
+import Project.DTO.InAndOuDTO;
+import Project.DTO.ReportDTO;
 import Project.DTO.Response;
 import Project.Entity.Account;
 import Project.Entity.User;
@@ -82,8 +84,8 @@ private void addIncome(){
     double amount = validation.getDoubleInput();
     System.out.println("Введите дату дохода (в формате ГГГГ-ММ-ДД): ");
     LocalDate date = validation.getDateInput();
-
-    Response<Account> response = userService.addNewIncomeToUser(user.getId(), amount, source, date);
+    InAndOuDTO inAndOuDTO = new InAndOuDTO(user.getId(), amount ,date);
+    Response<Account> response = userService.addNewIncomeToUser(inAndOuDTO, source);
 
     if (!response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
@@ -107,8 +109,8 @@ private void addOutcome(){
 
     System.out.println("Введите дату расхода (в формате ГГГГ-ММ-ДД): ");
     LocalDate date = validation.getDateInput();
-
-    Response<Account> response = userService.addNewOutcomeToUser(user.getId(), amount, category, date);
+    InAndOuDTO inAndOuDTO = new InAndOuDTO(user.getId(), amount ,date);
+    Response<Account> response = userService.addNewOutcomeToUser(inAndOuDTO, category);
 
     if (!response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
@@ -124,8 +126,8 @@ private void showHistory(){
      System.out.println("Введите конечную дату (в формате ГГГГ-ММ-ДД) или оставьте пустым для пропуска: ");
      LocalDate endDate = validation.getDateInput();
 
-
-    Response<List<Account>> response = balanceOperationService.getHistoryOfOperations(id, startDate, endDate,  null);
+    ReportDTO reportDTO = new ReportDTO(id,startDate,endDate, null);
+    Response<List<Account>> response = balanceOperationService.getHistoryOfOperations(reportDTO);
     if (!response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
     } else {
@@ -143,8 +145,8 @@ private void showHistory(){
         LocalDate startDate = getValidDateInput();
         System.out.println("Введите конечную дату (в формате ГГГГ-ММ-ДД) или оставьте пустым для просмотра всех операций: ");
         LocalDate endDate = getValidDateInput();
-
-        Response<String> reportResponse = balanceOperationService.generateReport(id, startDate, endDate, null);
+        ReportDTO reportDTO = new ReportDTO(id,startDate,endDate, null);
+        Response<String> reportResponse = balanceOperationService.generateReport(reportDTO);
 
         if (!reportResponse.getError().isEmpty()) {
             System.out.println("Ошибка: " + reportResponse.getError());

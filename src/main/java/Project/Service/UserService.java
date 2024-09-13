@@ -1,5 +1,6 @@
 package Project.Service;
 
+import Project.DTO.InAndOuDTO;
 import Project.DTO.Response;
 import Project.Entity.Account;
 import Project.Entity.User;
@@ -36,14 +37,14 @@ public class UserService {
         return new Response<>(foundUser.get(),"");
     }
 
-    public Response<Account> addNewIncomeToUser(Integer id, double amount, String source, LocalDate date) {
-        String validationResult = validation.validateIncome(amount);
+    public Response<Account> addNewIncomeToUser(InAndOuDTO inAndOuDTO, String source) {
+        String validationResult = validation.validateIncome(inAndOuDTO.getAmount());
         if (!validationResult.isEmpty()) {
             return new Response<>(null, validationResult);
         }
 
-        Account newIncome = new Account(amount, 0.0, source, date);
-        Optional<User> userOptional = repository.findUserById(id);
+        Account newIncome = new Account(inAndOuDTO.getAmount(), 0.0, source,inAndOuDTO.getDate());
+        Optional<User> userOptional = repository.findUserById(inAndOuDTO.getUserId());
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -55,14 +56,14 @@ public class UserService {
     }
 
 
-    public Response<Account> addNewOutcomeToUser(Integer id, double amount, String category, LocalDate date) {
-        String validationResult = validation.validateOutcome(amount);
+    public Response<Account> addNewOutcomeToUser(InAndOuDTO inAndOuDTO, String category) {
+        String validationResult = validation.validateOutcome(inAndOuDTO.getAmount());
         if (!validationResult.isEmpty()) {
             return new Response<>(null, validationResult);
         }
 
-        Account newOutcome = new Account(0.0, amount, category, date);
-        Optional<User> userOptional = repository.findUserById(id);
+        Account newOutcome = new Account(inAndOuDTO.getAmount(),0.0,  category, inAndOuDTO.getDate());
+        Optional<User> userOptional = repository.findUserById(inAndOuDTO.getUserId());
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
