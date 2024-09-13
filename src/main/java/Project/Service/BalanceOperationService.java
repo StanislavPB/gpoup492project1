@@ -13,33 +13,30 @@ import java.util.stream.Collectors;
 
 public class BalanceOperationService {
 
-    private final Repository repository;
-    private final Validation validation;
     private final UserService userService;
     public BalanceOperationService(Repository repository, Validation validation) {
-        this.repository = repository;
-        this.validation = validation;
         this.userService = new UserService(repository, validation);
     }
 
 
 
 
-    public Response<List<Account>> getHistoryOfOperations (ReportDTO reportDTO) {
-    Response<User> userResponse = userService.findUserById(reportDTO.getId());
+    public Response<List<Account>> getHistoryOfOperations (ReportDTO<Integer> reportDTO) {
+    Response<User> userResponse = userService.findUserById(reportDTO.getBody());
     if(!userResponse.getError().isEmpty()){
         return new Response<>(null, userResponse.getError());
     }
        User user = userResponse.getBody();
     List<Account> history = user.getBalances();
-    List<Account> filteredAccounts = filteredBalances(history,reportDTO.getStartDate(),reportDTO.getEndDate(),reportDTO.getCategory());
+    ReportDTO<List<Account>> reportRequest = new ReportDTO<>(history,reportDTO.getStartDate(),reportDTO.getEndDate(), reportDTO.getCategory());
+    List<Account> filteredAccounts = filteredBalances(reportRequest);
             return new Response<>(filteredAccounts, "");
     }
-    public List<Account> filteredBalances(List<Account> history, LocalDate startDate, LocalDate endDate, String category) {
-        return history.stream()
-                .filter(balance -> (startDate == null||!balance.getDate().isBefore(startDate)) &&
-                        (endDate == null || !balance.getDate().isAfter(endDate)) &&
-                        (category == null || balance.getCategory().equalsIgnoreCase(category)))
+    public List<Account> filteredBalances(ReportDTO<List<Account>> reportDTO) {
+        return reportDTO.getBody().stream()
+                .filter(balance -> (reportDTO.getStartDate() == null||!balance.getDate().isBefore(reportDTO.getEndDate())) &&
+                        (reportDTO.getEndDate() == null || !balance.getDate().isAfter(reportDTO.getEndDate())) &&
+                        (reportDTO.getCategory() == null || balance.getCategory().equalsIgnoreCase(reportDTO.getCategory())))
                 .collect(Collectors.toList());
     }
 

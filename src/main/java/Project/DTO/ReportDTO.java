@@ -2,23 +2,22 @@ package Project.DTO;
 
 import java.time.LocalDate;
 
-public class ReportDTO {
-    Integer id;
+public class ReportDTO <T> {
+    T body;
     LocalDate startDate;
     LocalDate endDate;
     String category;
 
-    public ReportDTO(Integer id, LocalDate startDate, LocalDate endDate, String category) {
-        this.id = id;
+    public ReportDTO(T body, LocalDate startDate, LocalDate endDate, String category) {
+        this.body = body;
         this.startDate = startDate;
         this.endDate = endDate;
         this.category = category;
     }
 
-    public Integer getId() {
-        return id;
+    public T getBody() {
+        return body;
     }
-
 
     public LocalDate getStartDate() {
         return startDate;
