@@ -62,7 +62,7 @@ public class UserService {
             return new Response<>(null, validationResult);
         }
 
-        Account newOutcome = new Account(inAndOuDTO.getAmount(),0.0,  category, inAndOuDTO.getDate());
+        Account newOutcome = new Account(0.0, inAndOuDTO.getAmount(),  category, inAndOuDTO.getDate());
         Optional<User> userOptional = repository.findUserById(inAndOuDTO.getUserId());
 
         if (userOptional.isPresent()) {
