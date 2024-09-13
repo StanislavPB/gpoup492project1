@@ -11,53 +11,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BalanceOperationService {
+
     private final Repository repository;
-    private Validation validation = new Validation();
-
-    public BalanceOperationService(Repository repository) {
+    private final Validation validation;
+    private final UserService userService;
+    public BalanceOperationService(Repository repository, Validation validation) {
         this.repository = repository;
+        this.validation = validation;
+        this.userService = new UserService(repository, validation);
     }
 
 
 
-    public Response<Account> addNewIncome(Integer id, double amount, String source, LocalDate date) {
-        String validationResult = validation.validateIncome(amount);
-        if (!validationResult.isEmpty()) {
-            return new Response<>(null, validationResult);
-        }
 
-        Account newIncome = new Account(amount, 0.0, source, date);
-        Optional<User> userOptional = repository.findUserById(id);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            repository.addIncomeToUser(user, newIncome);
-            return new Response<>(newIncome, "");
-        } else {
-            return new Response<>(null, "Ошибка: пользователь не найден.");
-        }
-    }
-
-
-    public Response<Account> addNewOutcome(Integer id, double amount, String category, LocalDate date) {
-        String validationResult = validation.validateOutcome(amount);
-        if (!validationResult.isEmpty()) {
-            return new Response<>(null, validationResult);
-        }
-
-        Account newOutcome = new Account(0.0, amount, category, date);
-        Optional<User> userOptional = repository.findUserById(id);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            repository.addOutcomeToUser(user, newOutcome);
-            return new Response<>(newOutcome, "");
-        } else {
-            return new Response<>(null, "Ошибка: пользователь не найден.");
-        }
-    }
     public Response<List<Account>> getHistoryOfOperations (Integer id, LocalDate startDate, LocalDate endDate, String category) {
-    Response<User> userResponse = findUserById(id);
+    Response<User> userResponse = userService.findUserById(id);
     if(!userResponse.getError().isEmpty()){
         return new Response<>(null, userResponse.getError());
     }
@@ -105,11 +73,4 @@ public class BalanceOperationService {
     }
 
 
-    public  Response<User> findUserById(Integer id){
-        Optional<User> foundUser = repository.findUserById(id);
-        if(foundUser.isEmpty()){
-        return new Response<>(null, "Ошибка: пользователь с ID " + id + " не найден.");
-    }
-        return new Response<>(foundUser.get(),"");
-
-}}
+}

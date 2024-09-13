@@ -17,7 +17,7 @@ public class UserMenu {
     private final Validation validation = new Validation();
     private final UserService userService = new UserService(repository, validation);
     private final Scanner scanner = new Scanner(System.in);
-    private final BalanceOperationService balanceOperationService = new BalanceOperationService(repository);
+    private final BalanceOperationService balanceOperationService = new BalanceOperationService(repository, validation);
 
     public void menuStart(){
         boolean working = true;
@@ -71,7 +71,7 @@ public class UserMenu {
     }
 private void addIncome(){
     Integer id = validation.getValidateId();
-    Response<User> userResponse = balanceOperationService.findUserById(id);
+    Response<User> userResponse = userService.findUserById(id);
     if (!userResponse.getError().isEmpty()) {
         System.out.println("Ошибка: " + userResponse.getError());
         return;
@@ -83,7 +83,7 @@ private void addIncome(){
     System.out.println("Введите дату дохода (в формате ГГГГ-ММ-ДД): ");
     LocalDate date = validation.getDateInput();
 
-    Response<Account> response = balanceOperationService.addNewIncome(user.getId(), amount, source, date);
+    Response<Account> response = userService.addNewIncomeToUser(user.getId(), amount, source, date);
 
     if (!response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
@@ -94,7 +94,7 @@ private void addIncome(){
 
 private void addOutcome(){
     Integer id = validation.getValidateId();
-    Response<User> userResponse = balanceOperationService.findUserById(id);
+    Response<User> userResponse = userService.findUserById(id);
     if(!userResponse.getError().isEmpty()){
         System.out.println("Ошибка: " + userResponse.getError());
         return;
@@ -108,7 +108,7 @@ private void addOutcome(){
     System.out.println("Введите дату расхода (в формате ГГГГ-ММ-ДД): ");
     LocalDate date = validation.getDateInput();
 
-    Response<Account> response = balanceOperationService.addNewOutcome(user.getId(), amount, category, date);
+    Response<Account> response = userService.addNewOutcomeToUser(user.getId(), amount, category, date);
 
     if (!response.getError().isEmpty()) {
         System.out.println("Ошибка: " + response.getError());
